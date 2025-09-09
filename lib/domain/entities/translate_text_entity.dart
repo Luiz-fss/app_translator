@@ -1,11 +1,10 @@
 class TranslateTextEntity {
-  final String textTranslate;
-  final String translatedText;
-  final bool isDownLoading;
+  final String? textTranslate;
+  final String? translatedText;
+
 
   TranslateTextEntity({
-    required this.isDownLoading,
-    required this.textTranslate,
-    required this.translatedText,
+     this.textTranslate,
+     this.translatedText,
   });
 }
