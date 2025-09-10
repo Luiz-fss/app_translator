@@ -7,25 +7,37 @@ class TranslateBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return               Expanded(
-      child: ColoredBox(
-        color: Colors.white,
-        child: Column(
-          children: [
-            TextField(
-              maxLength: 6,
+    return  Container(
+      color: Colors.white,
+      height: 250,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          TextField(
+            maxLines: 6,
+            onChanged: (value){},
+            controller: TextEditingController(),
+            decoration: InputDecoration(
+              labelText: "Escreva algo",
+              floatingLabelAlignment: FloatingLabelAlignment.start,
+              contentPadding: EdgeInsets.fromLTRB(10, 10, 10, 0),
+              border: OutlineInputBorder(
+                borderSide: BorderSide.none
+              )
             ),
-            Spacer(),
-            Divider(
-              indent: 10,endIndent: 10,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: icons,
-            )
+            textInputAction: TextInputAction.done,
+            onSubmitted: (s){},
+          ),
+          Spacer(),
+          Divider(
+            indent: 10,endIndent: 10,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: icons,
+          )
 
-          ],
-        ),
+        ],
       ),
     );
   }

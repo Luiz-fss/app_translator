@@ -1,4 +1,5 @@
 import 'package:app_translate/presenter/components/custom_drop_down_menu.dart';
+import 'package:app_translate/presenter/components/translate_box.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -11,6 +12,7 @@ class HomeScreen extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(15.0),
           child: Column(
+            spacing: 40,
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(15),
@@ -41,6 +43,12 @@ class HomeScreen extends StatelessWidget {
                   ),
                 ),
               ),
+              TranslateBox(
+                icons: [
+                  Icon(Icons.add)
+                ],
+              ),
+
             ],
           ),
         ),
