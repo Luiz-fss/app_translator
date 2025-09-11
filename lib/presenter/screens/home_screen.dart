@@ -1,12 +1,23 @@
+import 'package:app_translate/domain/helpers/language.dart';
+import 'package:app_translate/domain/repositories/translate_text_repository.dart';
 import 'package:app_translate/presenter/components/custom_drop_down_menu.dart';
 import 'package:app_translate/presenter/components/translate_box.dart';
+import 'package:app_translate/presenter/components/translate_options.dart';
+import 'package:app_translate/presenter/providers/languages_provider.dart';
+import 'package:app_translate/presenter/providers/translate_text_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+class HomeScreen extends ConsumerWidget {
+   HomeScreen({super.key});
+
+  final languages = Language.values;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context,WidgetRef ref) {
+
+    final sourceLanguage = ref.watch(sourceLanguageProvider);
+    final targetLanguage = ref.watch(targetLanguageProvider);
     return  Scaffold(
       body: SafeArea(
         child: Padding(
@@ -14,35 +25,7 @@ class HomeScreen extends StatelessWidget {
           child: Column(
             spacing: 40,
             children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(15),
-                child: ColoredBox(
-                  color: Colors.blueGrey ,
-                  child: Row(
-                    children: [
-                      Flexible(
-                        child: CustomDropDownMenu(
-                          onSelected: (value){},
-                          languages: [
-                            "Portuguese","English"
-                          ],
-                          initialSelection: "Portuguese",
-                        ),
-                      ),
-                      Icon(Icons.arrow_forward,color: Colors.white,),
-                      Flexible(
-                        child: CustomDropDownMenu(
-                          onSelected: (value){},
-                          languages: [
-                            "Portuguese","English"
-                          ],
-                          initialSelection: "English",
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              ),
+              TranslateOptions(languages),
               TranslateBox(
                 icons: [
                   Icon(Icons.volume_up),
@@ -57,16 +40,23 @@ class HomeScreen extends StatelessWidget {
                   Icon(Icons.volume_up),
                   Icon(Icons.copy),
                 ],
-                labelText: "Escreva algo...",
-                isTextField: true,
+                labelText: "Tradução",
+                isTextField: false,
               ),
-              
-              FilledButton(
-                style: ButtonStyle(
-                  backgroundColor: WidgetStatePropertyAll(Colors.blueGrey)
-                ),
-                onPressed: (){},
-                child: Text("Traduzir"),)
+
+              Flexible(
+                child: FilledButton(
+                  style: ButtonStyle(
+                    backgroundColor: WidgetStatePropertyAll(Colors.blueGrey)
+                  ),
+                  onPressed: (){
+                    ref.read(translateTextProvider.notifier).translate(TranslateTextParams(
+                        textTranslate: "",
+                        sourceLanguage: sourceLanguage,
+                        targetLanguage: targetLanguage));
+                  },
+                  child: Text("Traduzir"),),
+              )
 
             ],
           ),
