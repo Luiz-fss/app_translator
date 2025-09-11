@@ -45,9 +45,26 @@ class HomeScreen extends StatelessWidget {
               ),
               TranslateBox(
                 icons: [
-                  Icon(Icons.add)
+                  Icon(Icons.volume_up),
+                  Icon(Icons.copy),
+                  Icon(Icons.delete)
                 ],
+                labelText: "Escreva algo...",
               ),
+              TranslateBox(
+                icons: [
+                  Icon(Icons.volume_up),
+                  Icon(Icons.copy),
+                ],
+                labelText: "Escreva algo...",
+              ),
+              
+              FilledButton(
+                style: ButtonStyle(
+                  backgroundColor: WidgetStatePropertyAll(Colors.blueGrey)
+                ),
+                onPressed: (){},
+                child: Text("Traduzir"),)
 
             ],
           ),

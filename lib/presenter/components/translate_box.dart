@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 
 class TranslateBox extends StatelessWidget {
-  const TranslateBox({super.key, required this.icons});
+  const TranslateBox({super.key, required this.icons, this.onChanged, this.onSubmitted, required this.labelText});
 
   final List<Icon> icons;
+  final void Function(String)? onChanged;
+  final void Function(String)? onSubmitted;
+  final String labelText;
 
   @override
   Widget build(BuildContext context) {
@@ -13,12 +16,13 @@ class TranslateBox extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
+          SizedBox(height: 10,),
           TextField(
             maxLines: 6,
-            onChanged: (value){},
+            onChanged: onChanged,
             controller: TextEditingController(),
             decoration: InputDecoration(
-              labelText: "Escreva algo",
+              labelText: labelText,
               floatingLabelAlignment: FloatingLabelAlignment.start,
               contentPadding: EdgeInsets.fromLTRB(10, 10, 10, 0),
               border: OutlineInputBorder(
@@ -26,7 +30,7 @@ class TranslateBox extends StatelessWidget {
               )
             ),
             textInputAction: TextInputAction.done,
-            onSubmitted: (s){},
+            onSubmitted: onSubmitted,
           ),
           Spacer(),
           Divider(
@@ -35,7 +39,8 @@ class TranslateBox extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: icons,
-          )
+          ),
+          SizedBox(height: 10,)
 
         ],
       ),
