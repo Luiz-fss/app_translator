@@ -50,6 +50,7 @@ class HomeScreen extends StatelessWidget {
                   Icon(Icons.delete)
                 ],
                 labelText: "Escreva algo...",
+
               ),
               TranslateBox(
                 icons: [
@@ -57,6 +58,7 @@ class HomeScreen extends StatelessWidget {
                   Icon(Icons.copy),
                 ],
                 labelText: "Escreva algo...",
+                isTextField: true,
               ),
               
               FilledButton(
