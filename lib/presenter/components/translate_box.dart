@@ -6,17 +6,19 @@ class TranslateBox extends StatelessWidget {
     required this.icons,
     this.onChanged,
     this.onSubmitted,
-    required this.labelText,
+    this.labelText,
     this.translatedText,
     this.isTextField = true,
+    this.controller,
   });
 
-  final List<Icon> icons;
+  final List<Widget> icons;
   final void Function(String)? onChanged;
   final void Function(String)? onSubmitted;
-  final String labelText;
+  final String? labelText;
   final String? translatedText;
   final bool isTextField;
+  final TextEditingController? controller;
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +34,7 @@ class TranslateBox extends StatelessWidget {
               ? TextField(
                   maxLines: 6,
                   onChanged: onChanged,
-                  controller: TextEditingController(),
+                  controller: controller,
                   decoration: InputDecoration(
                     labelText: labelText,
                     alignLabelWithHint: true,

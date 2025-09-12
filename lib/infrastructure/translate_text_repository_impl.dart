@@ -8,7 +8,6 @@ class TranslateTextRepositoryImpl implements TranslateTextRepository{
    final onDeviceTranslator = OnDeviceTranslator(
        sourceLanguage: LanguageMapper.mapToMLKit(params.sourceLanguage),
        targetLanguage: LanguageMapper.mapToMLKit(params.targetLanguage));
-
    return await onDeviceTranslator.translateText(params.textTranslate);
   }
 }

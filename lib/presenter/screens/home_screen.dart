@@ -13,11 +13,14 @@ class HomeScreen extends ConsumerWidget {
 
   final languages = Language.values;
 
+  final controller = TextEditingController();
+
   @override
   Widget build(BuildContext context,WidgetRef ref) {
 
     final sourceLanguage = ref.watch(sourceLanguageProvider);
     final targetLanguage = ref.watch(targetLanguageProvider);
+    final translatedText = ref.watch(translateTextProvider);
     return  Scaffold(
       body: SafeArea(
         child: Padding(
@@ -27,22 +30,33 @@ class HomeScreen extends ConsumerWidget {
             children: [
               TranslateOptions(languages),
               TranslateBox(
+                controller: controller,
                 icons: [
                   Icon(Icons.volume_up),
                   Icon(Icons.copy),
-                  Icon(Icons.delete)
+                  IconButton(
+                    onPressed: (){
+                      ref.invalidate(translateTextProvider);
+                      controller.clear();
+                    },
+                    icon: Icon(Icons.add),
+                  )
                 ],
                 labelText: "Escreva algo...",
 
               ),
-              TranslateBox(
-                icons: [
-                  Icon(Icons.volume_up),
-                  Icon(Icons.copy),
-                ],
-                labelText: "Tradução",
-                isTextField: false,
-              ),
+              translatedText.whenOrNull(
+                data: (data)=> TranslateBox(
+                  icons: [
+                    Icon(Icons.volume_up),
+                    Icon(Icons.copy),
+                  ],
+                  labelText: "Tradução",
+                  translatedText: data.translateTextEntity?.translatedText,
+                  isTextField: false,
+                ),
+
+              )!,
 
               Flexible(
                 child: FilledButton(
@@ -51,7 +65,7 @@ class HomeScreen extends ConsumerWidget {
                   ),
                   onPressed: (){
                     ref.read(translateTextProvider.notifier).translate(TranslateTextParams(
-                        textTranslate: "",
+                        textTranslate: controller.text,
                         sourceLanguage: sourceLanguage,
                         targetLanguage: targetLanguage));
                   },
