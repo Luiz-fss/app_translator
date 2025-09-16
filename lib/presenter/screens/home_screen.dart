@@ -11,10 +11,8 @@ import 'package:app_translate/presenter/providers/translate_text_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-
-
 class HomeScreen extends ConsumerStatefulWidget {
-   HomeScreen({super.key});
+  HomeScreen({super.key});
 
   @override
   ConsumerState<HomeScreen> createState() => _HomeScreenState();
@@ -33,11 +31,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     final sourceLanguage = ref.watch(sourceLanguageProvider);
     final targetLanguage = ref.watch(targetLanguageProvider);
     final translatedText = ref.watch(translateTextProvider);
-    return  Scaffold(
+    return Scaffold(
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(15.0),
@@ -49,77 +46,97 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 TranslateOptions(languages),
                 TranslateBox(
                   controller: controller,
-                  onSubmitted: (text)async{
-                    await ref.read(translateTextProvider.notifier).translate(TranslateTextParams(
-                        textTranslate: controller.text,
-                        sourceLanguage: sourceLanguage,
-                        targetLanguage: targetLanguage));
+                  onSubmitted: (text) async {
+                    await ref
+                        .read(translateTextProvider.notifier)
+                        .translate(
+                          TranslateTextParams(
+                            textTranslate: controller.text,
+                            sourceLanguage: sourceLanguage,
+                            targetLanguage: targetLanguage,
+                          ),
+                        );
                   },
                   icons: [
                     IconButton(
-                      onPressed: ()async{
-                       await TextToSpeechService.speak(
-                         controller.text,
-                         language: LanguageToCodeMapper.mapLanguageToCode(sourceLanguage),
-                       );
-                      },
-                      icon: Icon(Icons.volume_up),
-                    ),
-                    IconButton(
-                      onPressed: ()async{
-                        await ClipboardService.copy(controller.text);
-                      },
-                      icon: Icon(Icons.copy),
-                    ),
-                    IconButton(
-                      onPressed: (){
-                        ref.invalidate(translateTextProvider);
-                        controller.clear();
-                      },
-                      icon: Icon(Icons.add),
-                    )
-                  ],
-                  labelText: "Escreva algo...",
-
-                ),
-              translatedText.whenOrNull(
-                data: (data) => TranslateBox(
-                  icons: [
-                    IconButton(
-                      onPressed: ()async{
+                      onPressed: () async {
                         await TextToSpeechService.speak(
-                          data.translateTextEntity?.translatedText ?? "",
-                          language: LanguageToCodeMapper.mapLanguageToCode(targetLanguage)
+                          controller.text,
+                          language: LanguageToCodeMapper.mapLanguageToCode(
+                            sourceLanguage,
+                          ),
                         );
                       },
                       icon: Icon(Icons.volume_up),
                     ),
                     IconButton(
-                      onPressed: (){
+                      onPressed: () async {
+                        await ClipboardService.copy(controller.text);
+                      },
+                      icon: Icon(Icons.copy),
+                    ),
+                    IconButton(
+                      onPressed: () {
                         ref.invalidate(translateTextProvider);
                         controller.clear();
                       },
                       icon: Icon(Icons.add),
                     ),
                   ],
-                  labelText: "Tradução",
-                  translatedText: data.translateTextEntity?.translatedText,
-                  isTextField: false,
+                  labelText: "Escreva algo...",
                 ),
-              ) ?? SizedBox.shrink(),
+                translatedText.whenOrNull(
+                      data: (data) => TranslateBox(
+                        icons: [
+                          IconButton(
+                            onPressed: () async {
+                              await TextToSpeechService.speak(
+                                data.translateTextEntity?.translatedText ?? "",
+                                language:
+                                    LanguageToCodeMapper.mapLanguageToCode(
+                                      targetLanguage,
+                                    ),
+                              );
+                            },
+                            icon: Icon(Icons.volume_up),
+                          ),
+                          IconButton(
+                            onPressed: () {
+                              ref.invalidate(translateTextProvider);
+                              controller.clear();
+                            },
+                            icon: Icon(Icons.add),
+                          ),
+                        ],
+                        labelText: "Tradução",
+                        translatedText:
+                            data.translateTextEntity?.translatedText,
+                        isTextField: false,
+                      ),
+                    ) ??
+                    SizedBox.shrink(),
 
                 FilledButton(
                   style: ButtonStyle(
-                    backgroundColor: WidgetStatePropertyAll(Colors.blueGrey)
+                    backgroundColor: WidgetStatePropertyAll(Colors.blueGrey),
+                    maximumSize: WidgetStatePropertyAll(Size(136,44))
                   ),
-                  onPressed: (){
-                    ref.read(translateTextProvider.notifier).translate(TranslateTextParams(
-                        textTranslate: controller.text,
-                        sourceLanguage: sourceLanguage,
-                        targetLanguage: targetLanguage));
-                  },
-                  child: Text("Traduzir"),)
 
+                  onPressed: () {
+                    ref
+                        .read(translateTextProvider.notifier)
+                        .translate(
+                          TranslateTextParams(
+                            textTranslate: controller.text,
+                            sourceLanguage: sourceLanguage,
+                            targetLanguage: targetLanguage,
+                          ),
+                        );
+                  },
+                  child: !translatedText.value!.isDownLoading
+                      ? Text("Traduzir")
+                      : CircularProgressIndicator.adaptive(backgroundColor: Colors.white,),
+                ),
               ],
             ),
           ),

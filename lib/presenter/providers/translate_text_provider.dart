@@ -34,6 +34,7 @@ class TranslateTextNotifier
 
   Future<void> translate(TranslateTextParams params) async {
     state = AsyncData(state.value!.copyWith(isDownLoading: true));
+
     final translatedText = await translateTextUsecase.call(params).catchError((
       onError,
     ) {

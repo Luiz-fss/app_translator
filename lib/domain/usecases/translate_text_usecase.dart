@@ -1,15 +1,21 @@
 
 
 import 'package:app_translate/domain/repositories/translate_text_repository.dart';
-import 'package:app_translate/infrastructure/translate_text_repository_impl.dart';
 
 class TranslateTextUsecase {
 
-  final TranslateTextRepository translateRepositoryImpl;
+  final TranslateTextRepository _translateRepositoryImpl;
 
-  TranslateTextUsecase(this.translateRepositoryImpl);
+  TranslateTextUsecase(this._translateRepositoryImpl);
 
   Future<String> call(TranslateTextParams params)async{
-    return await translateRepositoryImpl.translate(params);
+    if(!await _translateRepositoryImpl.isModelDownloaded(params.sourceLanguage)){
+      await _translateRepositoryImpl.downloadModel(params.sourceLanguage);
+    }
+
+    if(!await _translateRepositoryImpl.isModelDownloaded(params.targetLanguage)){
+      await _translateRepositoryImpl.downloadModel(params.targetLanguage);
+    }
+    return await _translateRepositoryImpl.translate(params);
   }
 }

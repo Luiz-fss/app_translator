@@ -5,6 +5,8 @@ import '../helpers/language.dart';
 abstract class TranslateTextRepository {
 
   Future<String> translate(TranslateTextParams params);
+  Future<void>downloadModel(Language language);
+  Future<bool> isModelDownloaded(Language language);
 }
 
 class TranslateTextParams {
