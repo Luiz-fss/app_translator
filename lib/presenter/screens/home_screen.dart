@@ -1,4 +1,5 @@
 import 'package:app_translate/domain/helpers/language.dart';
+import 'package:app_translate/domain/helpers/language_to_code_mapper.dart';
 import 'package:app_translate/domain/repositories/translate_text_repository.dart';
 import 'package:app_translate/infrastructure/services/clipboard_service.dart';
 import 'package:app_translate/infrastructure/services/text_to_speech_service.dart';
@@ -48,10 +49,19 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 TranslateOptions(languages),
                 TranslateBox(
                   controller: controller,
+                  onSubmitted: (text)async{
+                    await ref.read(translateTextProvider.notifier).translate(TranslateTextParams(
+                        textTranslate: controller.text,
+                        sourceLanguage: sourceLanguage,
+                        targetLanguage: targetLanguage));
+                  },
                   icons: [
                     IconButton(
                       onPressed: ()async{
-                       await TextToSpeechService.speak(controller.text);
+                       await TextToSpeechService.speak(
+                         controller.text,
+                         language: LanguageToCodeMapper.mapLanguageToCode(sourceLanguage),
+                       );
                       },
                       icon: Icon(Icons.volume_up),
                     ),
@@ -77,7 +87,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   icons: [
                     IconButton(
                       onPressed: ()async{
-                        await TextToSpeechService.speak(data.translateTextEntity?.translatedText ?? "");
+                        await TextToSpeechService.speak(
+                          data.translateTextEntity?.translatedText ?? "",
+                          language: LanguageToCodeMapper.mapLanguageToCode(targetLanguage)
+                        );
                       },
                       icon: Icon(Icons.volume_up),
                     ),
