@@ -1,5 +1,6 @@
 import 'package:app_translate/domain/helpers/language.dart';
 import 'package:app_translate/domain/repositories/translate_text_repository.dart';
+import 'package:app_translate/infrastructure/services/clipboard_service.dart';
 import 'package:app_translate/presenter/components/custom_drop_down_menu.dart';
 import 'package:app_translate/presenter/components/translate_box.dart';
 import 'package:app_translate/presenter/components/translate_options.dart';
@@ -25,28 +26,35 @@ class HomeScreen extends ConsumerWidget {
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(15.0),
-          child: Column(
-            spacing: 40,
-            children: [
-              TranslateOptions(languages),
-              TranslateBox(
-                controller: controller,
-                icons: [
-                  Icon(Icons.volume_up),
-                  Icon(Icons.copy),
-                  IconButton(
-                    onPressed: (){
-                      ref.invalidate(translateTextProvider);
-                      controller.clear();
-                    },
-                    icon: Icon(Icons.add),
-                  )
-                ],
-                labelText: "Escreva algo...",
-
-              ),
+          child: SingleChildScrollView(
+            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+            child: Column(
+              spacing: 40,
+              children: [
+                TranslateOptions(languages),
+                TranslateBox(
+                  controller: controller,
+                  icons: [
+                    Icon(Icons.volume_up),
+                    IconButton(
+                      onPressed: (){
+                        ClipboardService.copy(controller.text);
+                      },
+                      icon: Icon(Icons.copy),
+                    ),
+                    IconButton(
+                      onPressed: (){
+                        ref.invalidate(translateTextProvider);
+                        controller.clear();
+                      },
+                      icon: Icon(Icons.add),
+                    )
+                  ],
+                  labelText: "Escreva algo...",
+            
+                ),
               translatedText.whenOrNull(
-                data: (data)=> TranslateBox(
+                data: (data) => TranslateBox(
                   icons: [
                     Icon(Icons.volume_up),
                     Icon(Icons.copy),
@@ -55,11 +63,9 @@ class HomeScreen extends ConsumerWidget {
                   translatedText: data.translateTextEntity?.translatedText,
                   isTextField: false,
                 ),
-
-              )!,
-
-              Flexible(
-                child: FilledButton(
+              ) ?? SizedBox.shrink(),
+            
+                FilledButton(
                   style: ButtonStyle(
                     backgroundColor: WidgetStatePropertyAll(Colors.blueGrey)
                   ),
@@ -69,10 +75,10 @@ class HomeScreen extends ConsumerWidget {
                         sourceLanguage: sourceLanguage,
                         targetLanguage: targetLanguage));
                   },
-                  child: Text("Traduzir"),),
-              )
-
-            ],
+                  child: Text("Traduzir"),)
+            
+              ],
+            ),
           ),
         ),
       ),
